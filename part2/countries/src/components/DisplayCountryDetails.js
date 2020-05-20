@@ -1,4 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
+
+const SpecificCountry = (props) => {
+    const details = props.specificCountry
+    const [flag, setFlag] = useState(false)
+    const showDetails = () => { setFlag(true) }
+
+    if (!flag) {
+        return (
+            <>
+                <span>{details.name}</span>
+                <button onClick={showDetails}>show</button>
+                <br />
+            </>
+        )
+    } else if (flag) {
+        return (
+            <>
+                <h1>{details.name}</h1>
+                <div>capital {details.capital}</div>
+                <div>population {details.population}</div>
+                <h2>languages</h2>
+                {details.languages.map((language, i) => <li key={i}>{language.name}</li>)}
+                <br />
+                <img src={details.flag} alt="flag" height="150" width="150" />
+                <br />
+            </>
+        )
+    }
+}
 
 const DisplayCountryDetails = ({ searchCountries, input }) => {
     if (input === '') {
@@ -17,7 +46,7 @@ const DisplayCountryDetails = ({ searchCountries, input }) => {
                 <div>capital {country.capital}</div>
                 <div>population {country.population}</div>
                 <h2>languages</h2>
-                {country.languages.map(language => <li>{language.name}</li>)}
+                {country.languages.map((language, i) => <li key={i}>{language.name}</li>)}
                 <br />
                 <img src={country.flag} alt="flag" height="150" width="150" />
             </>
@@ -25,7 +54,9 @@ const DisplayCountryDetails = ({ searchCountries, input }) => {
     } else {
         return (
             <>
-                {searchCountries.map(country => <div>{country.name}</div>)}
+                {searchCountries.map((specificCountry, i) => {
+                    return (<SpecificCountry key={i} specificCountry={specificCountry} />)
+                })}
             </>
         )
     }
