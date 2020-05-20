@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const SpecificCountry = (props) => {
     const details = props.specificCountry
@@ -8,7 +9,7 @@ const SpecificCountry = (props) => {
     if (!flag) {
         return (
             <>
-                <span>{details.name}</span>
+                <span>{details.name}</span>&nbsp;
                 <button onClick={showDetails}>show</button>
                 <br />
             </>
@@ -29,6 +30,25 @@ const SpecificCountry = (props) => {
     }
 }
 
+const Weather = ({ capital }) => {
+    const api_key = process.env.REACT_APP_API_KEY
+    const [weather, setWeather] = useState({})
+
+    const hook = () => {
+        axios.get("http://api.weatherstack.com/current?access_key=" + api_key + "&query=" + capital).then((response) => setWeather(response.data.current))
+    }
+    useEffect(hook, {})
+    return (
+        <>
+            <h2>Weather of {capital}</h2>
+            <div><strong>temperature:</strong> {weather.temperature} Celcius</div>
+            <img src={weather.weather_icons} alt="weather" />
+            <div><strong>wind:</strong> {weather.wind_speed} mph direction {weather.wind_dir}</div>
+        </>
+    )
+
+}
+
 const DisplayCountryDetails = ({ searchCountries, input }) => {
     if (input === '') {
         return (
@@ -40,6 +60,7 @@ const DisplayCountryDetails = ({ searchCountries, input }) => {
         )
     } else if (searchCountries.length === 1) {
         const country = searchCountries[0]
+
         return (
             <>
                 <h1>{country.name}</h1>
@@ -49,6 +70,7 @@ const DisplayCountryDetails = ({ searchCountries, input }) => {
                 {country.languages.map((language, i) => <li key={i}>{language.name}</li>)}
                 <br />
                 <img src={country.flag} alt="flag" height="150" width="150" />
+                <Weather capital={country.capital} />
             </>
         )
     } else {
