@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
-import Persons from './components/Persons'
 import personService from './services/persons'
 
 const App = () => {
@@ -47,12 +46,31 @@ const App = () => {
         setPersonToShow(showPerson)
     }
 
+    const deletePerson = (event, id, name) => {
+        event.preventDefault()
+        if (window.confirm(`Delete ${name} ?`)) {
+            personService.deletePerson(id).then(response => {
+                setPersons(persons.filter(p => p.id !== id))
+                setPersonToShow(personToShow.filter(p => p.id !== id))
+            })
+        }
+
+    }
 
     return (
         <div>
             <Filter filterContent={filterContent} />
             <PersonForm submit={submit} getNumber={getNumber} getName={getName} newName={newName} newNumber={newNumber} />
-            <Persons personToShow={personToShow} />
+            <h2>Numbers</h2>
+            {personToShow.map((person, i) => {
+                return (
+                    <div key={i}>
+                        <span>{person.name} {person.number}</span>&nbsp;
+                        <button onClick={(event) => deletePerson(event, person.id, person.name)}>delete</button>
+                        <br />
+                    </div>
+                )
+            })}
         </div>
     )
 }
