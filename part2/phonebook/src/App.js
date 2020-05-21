@@ -13,6 +13,7 @@ const App = () => {
     const [newNumber, setNewNumber] = useState('')
     const [personToShow, setPersonToShow] = useState([])
     const [errorMessage, setErrorMessage] = useState(null)
+    const [messageState, setMessageState] = useState('success')
 
     const getName = (event) => {
         setNewName(event.target.value)
@@ -34,9 +35,16 @@ const App = () => {
                 personService.update(id, changedPerson).then(returnedPerson => {
                     setPersons(persons.map(p => p.id !== id ? p : returnedPerson))
                     setPersonToShow(persons.map(p => p.id !== id ? p : returnedPerson))
+                }).catch(error => {
+                    setErrorMessage(`Information of ${newName} has already been removed from the server`)
+                    setMessageState('error')
+                    setTimeout(() => setErrorMessage(null), 5000)
+                    setPersons(persons.filter(p => p.id !== id))
+                    setPersonToShow(personToShow.filter(p => p.id !== id))
                 })
             }
             setErrorMessage(`Modified number for ${newName}`)
+            setMessageState('success')
             setTimeout(() => setErrorMessage(null), 5000)
             setNewName('')
             setNewNumber('')
@@ -51,6 +59,7 @@ const App = () => {
                     setPersons(persons.concat(returnedPerson))
                     setPersonToShow(persons.concat(returnedPerson))
                     setErrorMessage(`Added ${newName}`)
+                    setMessageState('success')
                     setTimeout(() => setErrorMessage(null), 5000)
                     setNewName('')
                     setNewNumber('')
@@ -78,7 +87,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <Notification message={errorMessage} />
+            <Notification message={errorMessage} messageState={messageState} />
             <Filter filterContent={filterContent} />
             <PersonForm submit={submit} getNumber={getNumber} getName={getName} newName={newName} newNumber={newNumber} />
             <h2>Numbers</h2>
