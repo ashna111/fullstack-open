@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import Notification from './components/Notification'
 import personService from './services/persons'
+import './index.css'
 
 const App = () => {
     useEffect(() => personService.getAll().then((initialPersons) => { setPersons(initialPersons); setPersonToShow(initialPersons) }), [])
@@ -10,6 +12,7 @@ const App = () => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [personToShow, setPersonToShow] = useState([])
+    const [errorMessage, setErrorMessage] = useState(null)
 
     const getName = (event) => {
         setNewName(event.target.value)
@@ -33,6 +36,8 @@ const App = () => {
                     setPersonToShow(persons.map(p => p.id !== id ? p : returnedPerson))
                 })
             }
+            setErrorMessage(`Modified number for ${newName}`)
+            setTimeout(() => setErrorMessage(null), 5000)
             setNewName('')
             setNewNumber('')
         } else {
@@ -45,8 +50,11 @@ const App = () => {
                 .then(returnedPerson => {
                     setPersons(persons.concat(returnedPerson))
                     setPersonToShow(persons.concat(returnedPerson))
+                    setErrorMessage(`Added ${newName}`)
+                    setTimeout(() => setErrorMessage(null), 5000)
                     setNewName('')
                     setNewNumber('')
+
                 })
         }
     }
@@ -69,6 +77,8 @@ const App = () => {
 
     return (
         <div>
+            <h2>Phonebook</h2>
+            <Notification message={errorMessage} />
             <Filter filterContent={filterContent} />
             <PersonForm submit={submit} getNumber={getNumber} getName={getName} newName={newName} newNumber={newNumber} />
             <h2>Numbers</h2>
