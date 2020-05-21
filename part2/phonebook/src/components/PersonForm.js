@@ -12,7 +12,7 @@ const PersonForm = ({ submit, getName, newName, getNumber, newNumber }) => {
                     number: <input onChange={getNumber} value={newNumber} />
                 </div>
                 <div>
-                    <button type="submit" onClick={submit}>add</button>
+                    <button type="submit" onClick={(event) => submit(event, newNumber)}>add</button>
                 </div>
             </form>
         </>

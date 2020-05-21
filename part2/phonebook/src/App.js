@@ -19,12 +19,22 @@ const App = () => {
         setNewNumber(event.target.value)
     }
 
-    const submit = (event) => {
+    const submit = (event, number) => {
         event.preventDefault();
         const checkIfNameExists = persons.filter(person => person.name === newName)
         if (checkIfNameExists.length !== 0) {
-            alert(`${newName} is already added to phonebook`)
+            const id = checkIfNameExists[0].id
+            if (window.confirm(`${newName} is already added to phonebook,replace old number with a new one?`)) {
+                const personFound = persons.find(n => n.id === id)
+                const changedPerson = { ...personFound, number: number }
+
+                personService.update(id, changedPerson).then(returnedPerson => {
+                    setPersons(persons.map(p => p.id !== id ? p : returnedPerson))
+                    setPersonToShow(persons.map(p => p.id !== id ? p : returnedPerson))
+                })
+            }
             setNewName('')
+            setNewNumber('')
         } else {
             const newObj = {
                 name: newName,
