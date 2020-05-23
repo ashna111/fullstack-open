@@ -2,7 +2,10 @@ const express = require('express')
 const app = express()
 const PORT = 3001
 
+const morgan = require('morgan')
+
 app.use(express.json()) // for request.body to work
+app.use(morgan('tiny'))
 
 let persons = [
     {
