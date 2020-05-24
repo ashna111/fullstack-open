@@ -1,8 +1,14 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
+require('dotenv').config()
+
 const PORT = process.env.PORT || 3001
 
+//Models
+const Person = require('./models/person')
+
+//Middleware
 const morgan = require('morgan')
 
 app.use(cors())
@@ -20,40 +26,22 @@ morgan.token('body', (req) => {
 })
 app.use(morgan(':method :url :status :req[body] - :response-time ms :body'))
 
-let persons = [
-    {
-        "name": "Arto Hellas",
-        "number": "040-123456",
-        "id": 1
-    },
-    {
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523",
-        "id": 2
-    },
-    {
-        "name": "Dan Abramov",
-        "number": "12-43-234345",
-        "id": 3
-    },
-    {
-        "name": "Green Lantern",
-        "number": "90-123456",
-        "id": 4
-    }
-]
-
+//Methods
 const generateId = () => {
     let id = Math.floor(Math.random() * Math.floor(100000))
     return id
 }
 
+
+//Routes
 app.get('/', (req, res) => {
     res.send('Phonebook Backend')
 })
 
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+    Person.find({}).then(persons => {
+        res.json(persons)
+    })
 })
 
 app.post('/api/persons', (req, res) => {
@@ -62,20 +50,20 @@ app.post('/api/persons', (req, res) => {
             error: 'content missing'
         })
     }
-
-    if (persons.find(p => p.name === req.body.name)) {
-        return res.status(404).json({
-            error: 'name already exists'
-        })
-    }
-    const person = {
+    // if (persons.find(p => p.name === req.body.name)) {
+    //     return res.status(404).json({
+    //         error: 'name already exists'
+    //     })
+    // }
+    const person = new Person({
         name: req.body.name,
         number: req.body.number,
         id: generateId()
-    }
+    })
 
-    persons = persons.concat(person)
-    res.json(persons)
+    person.save().then(savedPerson => {
+        res.json(savedPerson)
+    })
 })
 
 app.get('/api/persons/:id', (req, res) => {
