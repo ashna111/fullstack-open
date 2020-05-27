@@ -50,7 +50,7 @@ blogsRouter.get('/:id', async (req, res) => {
     //     .catch(error => next(error))
 })
 
-blogsRouter.put('/:id', (req, res, next) => {
+blogsRouter.put('/:id', async (req, res) => {
     const blog = {
         title: req.body.title,
         author: req.body.author,
@@ -58,11 +58,14 @@ blogsRouter.put('/:id', (req, res, next) => {
         likes: req.body.likes
     }
 
-    Blog.findByIdAndUpdate(req.params.id, blog, { new: true })
-        .then(updatedBlog => {
-            res.json(updatedBlog)
-        })
-        .catch(error => next(error))
+    const newBlog = await Blog.findByIdAndUpdate(req.params.id, blog, { new: true })
+    res.json(newBlog.toJSON())
+
+    // Blog.findByIdAndUpdate(req.params.id, blog, { new: true })
+    //     .then(updatedBlog => {
+    //         res.json(updatedBlog)
+    //     })
+    //     .catch(error => next(error))
 })
 
 blogsRouter.delete('/:id', async (req, res) => {
