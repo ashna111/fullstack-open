@@ -54,6 +54,31 @@ test('a valid blog can be added ', async () => {
     )
 })
 
+test('if likes undefined, set to 0', async () => {
+    const newBlog = {
+        title: 'Learning Node.js',
+        author: 'University of Helsinki',
+        url: 'https://fullstackopen.com',
+    }
+
+    const checkBlog = {
+        title: 'Learning Node.js',
+        author: 'University of Helsinki',
+        url: 'https://fullstackopen.com',
+        likes: 0
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+    const result = response.body[response.body.length - 1]
+    expect(result.likes).toEqual(checkBlog.likes)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
