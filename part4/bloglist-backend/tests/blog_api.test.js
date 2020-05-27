@@ -79,6 +79,19 @@ test('if likes undefined, set to 0', async () => {
     expect(result.likes).toEqual(checkBlog.likes)
 })
 
+test('if title or url empty', async () => {
+    const newBlog = {
+        title: 'Learning Express',
+        author: 'University of Helsinki',
+        likes: 10
+    }
+
+    await await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })

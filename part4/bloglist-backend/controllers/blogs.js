@@ -11,7 +11,7 @@ blogsRouter.get('/', async (req, res) => {
 })
 
 blogsRouter.post('/', async (req, res) => {
-    if (!req.body.title || !req.body.author || !req.body.url) {
+    if (!req.body.title || !req.body.url) {
         return res.status(400).json({
             error: 'content missing'
         })
