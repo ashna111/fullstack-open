@@ -2,11 +2,12 @@ const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 
 mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
 
 const userSchema = new mongoose.Schema({
     username: { type: String, unique: true, minlength: 3, required: true },
     name: String,
-    password: { type: String, minlength: 3 },
+    passwordHash: { type: String },
     blogs: [
         {
             type: mongoose.Schema.Types.ObjectId,
