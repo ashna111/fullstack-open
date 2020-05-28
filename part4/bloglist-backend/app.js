@@ -9,6 +9,8 @@ const logger = require('./utils/logger')
 
 
 const blogsRouter = require('./controllers/blogs')
+const usersRouter = require('./controllers/users')
+
 const mongoose = require('mongoose')
 
 //DB Setup
@@ -29,6 +31,7 @@ app.use(express.json())
 
 //Routes
 app.use('/api/blogs', blogsRouter)
+app.use('/api/users', usersRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
