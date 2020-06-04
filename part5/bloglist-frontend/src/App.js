@@ -10,7 +10,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+
+  const [message, setMessage] = useState(null)
+  const [errorState, setErrorState] = useState('success')
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -47,11 +49,13 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setMessage('Wrong credentials')
+      setErrorState('error')
       setUsername('')
       setPassword('')
       setTimeout(() => {
-        setErrorMessage(null)
+        setMessage(null)
+        setErrorState('success')
       }, 5000)
     }
   }
@@ -69,6 +73,12 @@ const App = () => {
 
     blogService.create(newBlogObj).then((returnedBlog) => {
       setBlogs(blogs.concat(returnedBlog))
+      setErrorState('success')
+      setMessage(`A new Blog ${returnedBlog.title} was added by ${returnedBlog.author}`)
+      setTimeout(() => {
+        setMessage(null)
+        setErrorState('success')
+      }, 5000)
       setAuthor('')
       setTitle('')
       setUrl('')
@@ -78,7 +88,7 @@ const App = () => {
   if (user == null) {
     return (
       <>
-        <Notification message={errorMessage} />
+        <Notification message={message} errorState={errorState} />
         <h2>Log in to application</h2>
         <form onSubmit={handleLogin}>
           <div>
@@ -98,6 +108,7 @@ const App = () => {
         <h2>blogs</h2>
         <div>{user.name} is logged in</div>
         <button onClick={logout}>logout</button>
+        <Notification message={message} errorState={errorState} />
         <br />
         <h2>create new</h2>
         <form onSubmit={addBlog}>
