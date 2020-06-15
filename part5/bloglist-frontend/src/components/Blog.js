@@ -34,7 +34,7 @@ const Blog = ({ blog, blogs, setBlogs }) => {
 
   if (!flag) {
     return (
-      <div style={blogStyle}>
+      <div style={blogStyle} className="blog-default">
         <div>
           {blog.title} {blog.author} &nbsp; <button onClick={showDetails}>view</button>
         </div>
