@@ -6,7 +6,23 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import './index.css'
 
-const NewNote = ({ addBlog, title, author, url, setTitle, setAuthor, setUrl }) => {
+const NewNote = ({ createBlog }) => {
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
+  const addBlog = (event) => {
+    event.preventDefault()
+    const newBlogObj = {
+      author, title, url
+    }
+
+    createBlog(newBlogObj)
+    setAuthor('')
+    setTitle('')
+    setUrl('')
+  }
+
   return (
     <>
       <h2>create new</h2>
@@ -28,10 +44,6 @@ const App = () => {
 
   const [message, setMessage] = useState(null)
   const [errorState, setErrorState] = useState('success')
-
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -80,12 +92,7 @@ const App = () => {
     setUser(null)
   }
 
-  const addBlog = (event) => {
-    event.preventDefault()
-    const newBlogObj = {
-      author, title, url
-    }
-
+  const createBlog = (newBlogObj) => {
     blogService.create(newBlogObj).then((returnedBlog) => {
       setBlogs(blogs.concat(returnedBlog))
       setErrorState('success')
@@ -94,9 +101,6 @@ const App = () => {
         setMessage(null)
         setErrorState('success')
       }, 5000)
-      setAuthor('')
-      setTitle('')
-      setUrl('')
     })
   }
 
@@ -126,7 +130,7 @@ const App = () => {
         <Notification message={message} errorState={errorState} />
         <br />
         <Togglable buttonLabel="new note">
-          <NewNote addBlog={addBlog} title={title} author={author} url={url} setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl} />
+          <NewNote createBlog={createBlog} />
         </Togglable>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
