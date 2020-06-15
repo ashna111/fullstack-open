@@ -129,7 +129,7 @@ const App = () => {
         <button onClick={logout}>logout</button>
         <Notification message={message} errorState={errorState} />
         <br />
-        <Togglable buttonLabel="new note">
+        <Togglable buttonLabel="new blog">
           <NewNote createBlog={createBlog} />
         </Togglable>
         {blogs.map(blog =>
