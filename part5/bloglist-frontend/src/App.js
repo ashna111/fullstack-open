@@ -47,7 +47,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      setBlogs(blogs.sort((a, b) => b.likes - a.likes))
     )
   }, [])
 
@@ -94,7 +94,7 @@ const App = () => {
 
   const createBlog = (newBlogObj) => {
     blogService.create(newBlogObj).then((returnedBlog) => {
-      setBlogs(blogs.concat(returnedBlog))
+      setBlogs(blogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes))
       setErrorState('success')
       setMessage(`A new Blog ${returnedBlog.title} was added by ${returnedBlog.author}`)
       setTimeout(() => {

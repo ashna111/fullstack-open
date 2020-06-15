@@ -19,7 +19,7 @@ const Blog = ({ blog, blogs, setBlogs }) => {
     const updatedBlog = { ...foundBlog, likes: foundBlog.likes + 1 }
 
     blogService.update(id, updatedBlog).then(returnedBlog => {
-      setBlogs(blogs.map(b => b.id !== id ? b : returnedBlog))
+      setBlogs(blogs.map(b => b.id !== id ? b : returnedBlog).sort((a, b) => b.likes - a.likes))
     })
 
   }
