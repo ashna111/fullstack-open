@@ -24,6 +24,14 @@ const Blog = ({ blog, blogs, setBlogs }) => {
 
   }
 
+  const removeBlog = (event, id, name, author) => {
+    if (window.confirm(`Remove blog ${name} by ${author}?`)) {
+      blogService.deleteBlog(id).then(response => {
+        setBlogs(blogs.filter(p => p.id !== id).sort((a, b) => b.likes - a.likes))
+      })
+    }
+  }
+
   if (!flag) {
     return (
       <div style={blogStyle}>
@@ -39,6 +47,7 @@ const Blog = ({ blog, blogs, setBlogs }) => {
         <div>{blog.url}</div>
         <div>{blog.likes}&nbsp; <button onClick={(event) => updateLikeCount(event, blog.id)}>like</button></div>
         <div>{blog.author}</div>
+        <button onClick={(event) => removeBlog(event, blog.id, blog.title, blog.author)}>remove</button>
       </div>
     )
   }
