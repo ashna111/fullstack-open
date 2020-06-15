@@ -5,6 +5,7 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import './index.css'
+import PropTypes from 'prop-types'
 
 const NewNote = ({ createBlog }) => {
   const [title, setTitle] = useState('')
@@ -34,6 +35,10 @@ const NewNote = ({ createBlog }) => {
       </form>
     </>
   )
+}
+
+NewNote.propTypes = {
+  createBlog: PropTypes.func.isRequired
 }
 
 const App = () => {
