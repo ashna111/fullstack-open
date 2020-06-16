@@ -31,4 +31,53 @@ describe('Blog app', function () {
             cy.contains("Wrong credentials")
         })
     })
+
+    describe.only("When logged in", function () {
+        beforeEach(function () {
+            cy.request('POST', 'http://localhost:3001/api/login', {
+                username: 'ashna111', password: 'fullstack'
+            }).then(response => {
+                localStorage.setItem('loggedBlogAppUser', JSON.stringify(response.body))
+                cy.visit('http://localhost:3000')
+            })
+        })
+
+        it("a new blog can be created", function () {
+            cy.contains("new blog").click()
+
+            cy.get("#title").type("Test Title")
+            cy.get("#author").type("Test Author")
+            cy.get("#url").type("Test URL")
+            cy.get("#create-blog").click()
+
+            cy.contains("Test Title")
+        })
+
+        it("user can like a blog", function () {
+            cy.contains("new blog").click()
+
+            cy.get("#title").type("Test Title")
+            cy.get("#author").type("Test Author")
+            cy.get("#url").type("Test URL")
+            cy.get("#create-blog").click()
+
+            cy.contains("Test Title")
+            cy.contains("view").click()
+            cy.contains("like").click()
+            cy.contains(1)
+        })
+
+        it("user can delete blog", function () {
+            cy.contains("new blog").click()
+
+            cy.get("#title").type("Test Title")
+            cy.get("#author").type("Test Author")
+            cy.get("#url").type("Test URL")
+            cy.get("#create-blog").click()
+
+            cy.contains("Test Title")
+            cy.contains("view").click()
+            cy.contains("remove").click()
+        })
+    })
 })
