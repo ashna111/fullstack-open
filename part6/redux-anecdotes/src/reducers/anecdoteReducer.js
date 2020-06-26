@@ -1,15 +1,32 @@
+import anecdoteService from '../services/anecdotes'
+
 export const createAnecdote = (anecdote) => {
-  return { type: 'NEW_ANECDOTE', data: anecdote }
+  return async dispatch => {
+    const newAnecdote = await anecdoteService.createNew(anecdote)
+    dispatch({
+      type: 'NEW_ANECDOTE',
+      data: newAnecdote,
+    })
+  }
 }
 
-export const incrementVote = (id) => {
-  return { type: 'INCREMENT_VOTE', data: { id } }
+export const incrementVote = (anecdote) => {
+  return async dispatch => {
+    const updatedAnecdote = await anecdoteService.update(anecdote.id, { ...anecdote, votes: anecdote.votes + 1 })
+    dispatch({
+      type: 'INCREMENT_VOTE',
+      data: updatedAnecdote
+    })
+  }
 }
 
-export const initializeAnecdotes = (anecdotes) => {
-  return {
-    type: 'INIT_ANECDOTES',
-    data: anecdotes,
+export const initializeAnecdotes = () => {
+  return async dispatch => {
+    const anecdotes = await anecdoteService.getAll()
+    dispatch({
+      type: 'INIT_ANECDOTES',
+      data: anecdotes,
+    })
   }
 }
 

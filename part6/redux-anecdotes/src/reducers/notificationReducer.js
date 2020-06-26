@@ -9,10 +9,15 @@ const filterReducer = (state = null, action) => {
     }
 }
 
-export const setNotification = (content) => {
-    return {
-        type: 'SET_NOTIF',
-        message: content
+export const setNotification = (content, time) => {
+    return async dispatch => {
+        dispatch({
+            type: 'SET_NOTIF',
+            message: content
+        })
+        setTimeout(() => {
+            dispatch(removeNotification())
+        }, time * 1000)
     }
 }
 
