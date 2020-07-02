@@ -20,5 +20,11 @@
 ***
 
 #### Certificate:
-<img scr="certificate-fullstack.png">
+<table>
+  <tr>
+    <td>
+    <img src="certificate-fullstack.png" width=700px/>
+    </td>
+  </tr>
+ </table>
 
